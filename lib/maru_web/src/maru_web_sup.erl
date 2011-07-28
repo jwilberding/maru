@@ -33,23 +33,33 @@ start_link() ->
 -spec init(list()) -> {ok, {SupFlags::any(), [ChildSpec::any()]}} |
                        ignore | {error, Reason::any()}.
 init([]) ->
-    RestartStrategy = one_for_one,
-    MaxRestarts = 1000,
-    MaxSecondsBetweenRestarts = 3600,
+    WebChild = {webmachine_mochiweb,
+                {webmachine_mochiweb, start, [config()]},
+                permanent, 5000, worker, dynamic},
 
+    RestartStrategy = one_for_one,
+    MaxRestarts = 3,
+    MaxSecondsBetweenRestarts = 10,
     SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
-    Restart = permanent,
-    Shutdown = 2000,
-    Type = worker,
-
-    AChild = {'AName', {'AModule', start_link, []},
-              Restart, Shutdown, Type, ['AModule']},
-
-    {ok, {SupFlags, [AChild]}}.
+    {ok, {SupFlags , [WebChild]}}.
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+config() ->
+    {ok, IP} = application:get_env(webmachine_ip),
+    {ok, Port} = application:get_env(webmachine_port),
+    {ok, App} = application:get_application(),
+    LogDir = code:priv_dir(App) ++ "/logs",
+    {ok, DispatchFile} = application:get_env(dispatch_file),
+    {ok, Dispatch} = file:consult(DispatchFile),
+
+    [{ip, IP},
+     {port, Port},
+     {log_dir, LogDir},
+     {backlog, 128},
+     {dispatch, Dispatch}].
 
 

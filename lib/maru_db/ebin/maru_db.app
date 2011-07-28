@@ -1,12 +1,16 @@
+%% -*- erlang -*-
 %% This is the application resource file (.app file) for the maru_db,
 %% application.
 {application, maru_db,
-  [{description, "Your Desc HERE"},
+  [{description, "Maru db interface"},
    {vsn, "0.1.0"},
    {modules, [maru_db_app,
-              maru_db_sup]},
+              maru_db_sup,
+
+              maru_db,
+              maru_db_mnesia]},
    {registered,[maru_db_sup]},
-   {applications, [kernel, stdlib]},
+   {applications, [kernel, stdlib, idioms]},
    {mod, {maru_db_app,[]}},
    {start_phases, []}]}.
 

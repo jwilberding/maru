@@ -1,0 +1,1 @@
+-compile({parse_transform, maru_model_transform}).

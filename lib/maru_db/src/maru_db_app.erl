@@ -22,8 +22,8 @@
                       {error, Reason::any()}.
 start(_StartType, _StartArgs) ->
     case maru_db_sup:start_link() of
-        {ok, Pid} ->
-            {ok, Pid};
+        {ok, PID} ->
+            {ok, PID};
         Error ->
             Error
     end.

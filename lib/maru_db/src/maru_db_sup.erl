@@ -33,20 +33,17 @@ start_link() ->
 -spec init(list()) -> {ok, {SupFlags::any(), [ChildSpec::any()]}} |
                        ignore | {error, Reason::any()}.
 init([]) ->
-    RestartStrategy = one_for_one,
-    MaxRestarts = 1000,
-    MaxSecondsBetweenRestarts = 3600,
+    WebChild = {maru_db_mnesia,
+                {maru_db_mnesia, start_link, []},
+                permanent, 5000, worker, dynamic},
 
+    RestartStrategy = one_for_one,
+    MaxRestarts = 3,
+    MaxSecondsBetweenRestarts = 10,
     SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
-    Restart = permanent,
-    Shutdown = 2000,
-    Type = worker,
+    {ok, {SupFlags , [WebChild]}}.
 
-    AChild = {'AName', {'AModule', start_link, []},
-              Restart, Shutdown, Type, ['AModule']},
-
-    {ok, {SupFlags, [AChild]}}.
 
 %%%===================================================================
 %%% Internal functions
