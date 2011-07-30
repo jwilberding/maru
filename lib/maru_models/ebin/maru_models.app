@@ -1,4 +1,4 @@
-%% -*- erlang --*
+%% -*- erlang -*-
 %% This is the application resource file (.app file) for the maru_models,
 %% application.
 {application, maru_models,
@@ -8,8 +8,7 @@
               maru_model_base,
               maru_model_types,
               maru_model_users,
-              jsonerl,
-              sha2]},
+              maru_jsonerl]},
    {registered,[]},
    {applications, [kernel, stdlib, sasl, crypto, bcrypt, ossp_uuid]},
    {start_phases, []}]}.
