@@ -8,6 +8,7 @@
               maru_model_base,
               maru_model_types,
               maru_model_users,
+              maru_model_sessions,
               maru_jsonerl]},
    {registered,[]},
    {applications, [kernel, stdlib, sasl, crypto, bcrypt, ossp_uuid]},

@@ -1,4 +1,4 @@
--module(jsonerl).
+-module(maru_jsonerl).
 
 -export([encoder/1, encode/1]).
 -export([decoder/1, decode/1]).
