@@ -26,14 +26,14 @@ content_types_provided(ReqData, Ctx) ->
     {[{webmachine_util:guess_mime(Path), provide_content}], ReqData, Ctx}.
 
 provide_content(ReqData, Ctx) ->
-    NewReqData = wrq:set_resp_header("X-Accel-Redirect", "/files/test.html", ReqData),
-    {"", NewReqData, Ctx}.
+    %NewReqData = wrq:set_resp_header("X-Accel-Redirect", "/files/test.html", ReqData),
+    %{"", NewReqData, Ctx}.
 
-    % case maru_web_utils:maybe_fetch_object(Ctx, wrq:disp_path(ReqData)) of
-    %     {true, NewCtx} ->
-    %         Body = NewCtx#ctx.response_body,
-    %         {Body, ReqData, Ctx};
-    %     {false, NewCtx} ->
-    %         {error, ReqData, NewCtx}
-    % end.
+    case maru_web_utils:maybe_fetch_object(Ctx, wrq:disp_path(ReqData)) of
+        {true, NewCtx} ->
+            Body = NewCtx#ctx.response_body,
+            {Body, ReqData, Ctx};
+        {false, NewCtx} ->
+            {error, ReqData, NewCtx}
+    end.
 

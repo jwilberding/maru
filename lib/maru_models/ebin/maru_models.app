@@ -7,6 +7,7 @@
    {modules, [maru_model_transform,
               maru_model_base,
               maru_model_types,
+              maru_model_users,
               jsonerl,
               sha2]},
    {registered,[maru_models_sup]},
