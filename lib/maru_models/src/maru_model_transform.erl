@@ -227,7 +227,7 @@ f_set_2(Rname, Flds, L) ->
                  {record, L, {var,L,'R'}, Rname,
                   [{record_field, L,
                     {atom, L, Attr},
-                    {call, L, {remote, L,{atom, L, ct_model_types}, {atom, L, convert}}, [{call, L, {atom, L, type}, [{atom, L, Attr}]}, {var, L, 'V'}]}}]},
+                    {call, L, {remote, L,{atom, L, maru_model_types}, {atom, L, convert}}, [{call, L, {atom, L, type}, [{atom, L, Attr}]}, {var, L, 'V'}]}}]},
                  {var, L, 'F1'}]}]} || Attr <- Flds]]}}},
         {call, L, {var, L, 'F'}, [{var, L, 'Vals'},
                                   {var, L, 'Rec'},
