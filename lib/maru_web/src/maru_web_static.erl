@@ -12,7 +12,8 @@
 -include_lib("kernel/include/file.hrl").
 
 init([]) ->
-    {ok, HostDir} = application:get_env(host_dir),
+    {ok, {priv, App}} = application:get_env(host_dir),
+    HostDir = application:priv_dir(App),
     {ok, #ctx{docroot=HostDir}}.
 
 allowed_methods(ReqData, Ctx) ->
