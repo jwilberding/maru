@@ -76,7 +76,8 @@ to_json(ReqData, Ctx) ->
     end.
 
 to_html(ReqData, Ctx) ->
-    {ok, HostDir} = application:get_env(host_dir),
+    {ok, {priv, App}} = application:get_env(host_dir),
+    HostDir = code:priv_dir(App),
     NewCtx = Ctx#ctx{docroot=HostDir},
     case maru_web_utils:maybe_fetch_object(NewCtx, "user/new.html") of
         {true, NewCtx2} ->

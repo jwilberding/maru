@@ -71,7 +71,7 @@ config() ->
 create_static_from_templates(HostDir) ->
     filelib:fold_files(HostDir, "html", true,
                        fun(X, _Acc) ->
-                               erlydtl:compile(X, page),
+                               erlydtl:compile(X, page, [force_recompile]),
                                {ok, File} = page:render(),
                                file:write_file(X, File),
                                ok

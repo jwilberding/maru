@@ -13,7 +13,7 @@
 
 init([]) ->
     {ok, {priv, App}} = application:get_env(host_dir),
-    HostDir = application:priv_dir(App),
+    HostDir = code:priv_dir(App),
     {ok, #ctx{docroot=HostDir}}.
 
 allowed_methods(ReqData, Ctx) ->
