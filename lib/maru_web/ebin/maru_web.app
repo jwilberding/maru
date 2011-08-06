@@ -16,7 +16,7 @@
               maru_resource_authenticate,
               maru_resource_user]},
    {registered,[maru_web_sup]},
-   {applications, [kernel, stdlib, webmachine, maru_models, erlydtl]},
+   {applications, [kernel, stdlib, webmachine, maru_models, erlydtl, bcrypt]},
    {mod, {maru_web_app,[]}},
    {start_phases, []}]}.
 

@@ -40,7 +40,7 @@ process_post(ReqData, Ctx) ->
         JSON ->
             {struct, PropList} = mochijson2:decode(JSON),
             Username = proplists:get_value(<<"username">>, PropList),
-            Password = bcrypt:hashpw(binary_to_list(proplists:get_value(<<"password">>, PropList)), bcrypt:gen_salt()),
+            Password = binary_to_list(proplists:get_value(<<"password">>, PropList)),
 
             case maru_web_authenticate:is_valid(Username, Password) of
                 true ->
