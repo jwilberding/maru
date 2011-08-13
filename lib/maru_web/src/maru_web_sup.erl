@@ -69,10 +69,12 @@ config() ->
      {dispatch, Dispatch}].
 
 create_static_from_templates(HostDir) ->
-    filelib:fold_files(HostDir, "html", true,
+    TemplatesDir = filename:join(HostDir, "templates"),
+    filelib:fold_files(TemplatesDir, "html", true,
                        fun(X, _Acc) ->
+			       NewFileName = filename:join(HostDir, filename:split(X) -- filename:split(TemplatesDir)),
                                erlydtl:compile(X, page, [force_recompile]),
                                {ok, File} = page:render(),
-                               file:write_file(X, File),
+                               file:write_file(NewFileName, File),
                                ok
                        end, ok).
