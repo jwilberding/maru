@@ -11,7 +11,8 @@
 -include_lib("idioms/include/idioms.hrl").
 
 %% API
--export([create_table/2,
+-export([all/1,
+	 create_table/2,
          store/1,
          find/2,
          match/2]).
@@ -19,6 +20,14 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+
+all(Tab) ->
+    case mnesia:transaction(?FUN(mnesia:all_keys(Tab))) of
+	{atomic, Keys} ->
+	    Keys;
+	{aborted, Reason} ->
+	    {error, Reason}
+    end.
 
 create_table(Name, Fields) ->
     mnesia:create_table(Name, [{attributes, Fields}]).

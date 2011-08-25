@@ -39,7 +39,7 @@
     % create quickly accessible maping of struct values by its keys turned to atoms, as it is in records.
     lists:foldl(
       fun({K, V}, Dict) ->
-        dict:store(jsonerl:to_ex_a(K), V, Dict)
+        dict:store(maru_jsonerl:to_ex_a(K), V, Dict)
       end,
       dict:new(),
       tuple_to_list(Struct)
@@ -49,10 +49,10 @@
 
 -define(record_to_json(RecordName, Record),
   % serialize erlang struct into json string
-  jsonerl:encode(?record_to_struct(RecordName, Record))
+  maru_jsonerl:encode(?record_to_struct(RecordName, Record))
 ).
 
 -define(json_to_record(RecordName, Json),
   % decode json text to erlang struct
-  ?struct_to_record(RecordName, jsonerl:decode(Json))
+  ?struct_to_record(RecordName, maru_jsonerl:decode(Json))
 ).

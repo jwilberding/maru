@@ -58,7 +58,7 @@ config() ->
     HostDir = code:priv_dir(HostApp),
     %{ok, {priv, HostApp}} = application:get_env(dispatch_file),
     {ok, Dispatch} = file:consult(filename:join(HostDir, "dispatch")),
-    io:format("HOSTDIR ~p~n", [HostDir]),
+
     %% Write out erlydtl compiled templates to priv dir for serving
     create_static_from_templates(HostDir),
 

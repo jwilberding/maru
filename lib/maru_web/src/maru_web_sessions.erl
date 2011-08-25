@@ -25,7 +25,10 @@
 
 -spec set_new_client_session_id(rd()) -> rd().
 set_new_client_session_id(ReqData) ->
-    set_client_session_id(ReqData, new()).
+    Session = new(),
+    ID = maru_model_sessions:get(id, Session),
+    maru_model_sessions:save(maru_model_sessions:set(id, Session, bcrypt:hashpw(ID,  bcrypt:gen_salt()))),
+    set_client_session_id(ReqData, Session).
 
 -spec set_client_session_id(rd(), record()) -> rd().
 set_client_session_id(ReqData, Session) ->
