@@ -34,21 +34,15 @@ resource_exists(ReqData, Ctx) ->
 
 -spec process_post(term(), term()) -> {term(), term(), term()}.
 process_post(ReqData, Ctx) ->
-    case wrq:req_body(ReqData) of
-        undefined ->
-            {false, ReqData, Ctx};
-        JSON ->
-            {struct, PropList} = mochijson2:decode(JSON),
-            Username = proplists:get_value(<<"username">>, PropList),
-            Password = binary_to_list(proplists:get_value(<<"password">>, PropList)),
+    Username = wrq:get_qs_value("username", ReqData),
+    Password = wrq:get_qs_value("password", ReqData),
 
-            case maru_web_authenticate:is_valid(Username, Password) of
-                true ->
-                    NewReqData = maru_web_sessions:set_new_client_session_id(ReqData),
-                    {true, NewReqData, Ctx};
-                false ->
-                    {false, ReqData, Ctx}
-            end
+    case maru_web_authenticate:is_valid(Username, Password) of
+        true ->
+            NewReqData = maru_web_sessions:set_new_client_session_id(ReqData),
+            {true, NewReqData, Ctx};
+        false ->
+            {false, ReqData, Ctx}
     end.
 
 %%%===================================================================
