@@ -51,7 +51,8 @@ process_post(ReqData, Ctx) ->
                 error ->
                     {false, ReqData, Ctx};
                 _ ->
-                    {true, ReqData, Ctx}
+                    ReqData2 = wrq:append_to_response_body(UserJSON, ReqData),
+                    {true, ReqData2, Ctx}
             end
     end.
 

@@ -19,8 +19,7 @@
          to_record/1]).
 
 -record(maru_model_users, {id = ossp_uuid:make(v1, text) :: maru_model_types:maru_key(),
-                           firstname                     :: maru_model_types:maru_string(),
-                           lastname                      :: maru_model_types:maru_string(),
+                           fullname                      :: maru_model_types:maru_string(),
                            username                      :: maru_model_types:maru_string(),
                            email                         :: maru_model_types:maru_email(),
                            password                      :: maru_model_types:maru_password(),
