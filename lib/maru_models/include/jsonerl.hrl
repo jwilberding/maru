@@ -18,41 +18,20 @@
 
 -define(struct_to_record(RecordName, Struct),
   % I use fun here in order to avoid possible variable collison by shaddowing them
-  fun(ValuesByFieldsDict) ->
-    % construct the tuple being the proper record from the struct
-    list_to_tuple(
-      %% first element in the tuple is record name
-      [RecordName] ++
-      lists:map(
-        %% convention: json's *null* represents record's *undefined* value
-        fun(Field) ->
-          case dict:find(Field, ValuesByFieldsDict) of
-            {ok, Value} -> Value;
-            error -> undefined
-          end
-        end,
-        % getting the record field names in the order the tuple representing the record instance has its values
-        record_info(fields, RecordName)
-      )
-    )
+  fun(PropList) ->
+          io:format("~p~n", [PropList]),
+          RecordName:new(PropList)
   end(
-    % create quickly accessible maping of struct values by its keys turned to atoms, as it is in records.
-    lists:foldl(
-      fun({K, V}, Dict) ->
-        dict:store(maru_jsonerl:to_ex_a(K), V, Dict)
-      end,
-      dict:new(),
-      tuple_to_list(Struct)
-    )
+    [{maru_model_utils:to_ex_a(K), V} || {K, V} <- element(1, Struct)]
   )
 ).
 
 -define(record_to_json(RecordName, Record),
   % serialize erlang struct into json string
-  maru_jsonerl:encode(?record_to_struct(RecordName, Record))
+  jiffy:encode(?record_to_struct(RecordName, Record))
 ).
 
 -define(json_to_record(RecordName, Json),
   % decode json text to erlang struct
-  ?struct_to_record(RecordName, maru_jsonerl:decode(Json))
+  ?struct_to_record(RecordName, jiffy:decode(Json))
 ).

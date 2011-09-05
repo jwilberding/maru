@@ -9,8 +9,8 @@
               maru_model_types,
               maru_model_users,
               maru_model_sessions,
-              maru_jsonerl]},
+              maru_model_utils]},
    {registered,[]},
-   {applications, [kernel, stdlib, sasl, crypto, bcrypt, ossp_uuid]},
+   {applications, [kernel, stdlib, sasl, crypto, bcrypt, ossp_uuid, jiffy]},
    {start_phases, []}]}.
 

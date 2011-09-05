@@ -42,12 +42,17 @@
 %%%===================================================================
 
 convert(maru_password, X) when is_list(X) ->
-    bcrypt:hashpw(X, bcrypt:gen_salt());
+    convert_maru_password(X);
 convert(maru_password, X) when is_binary(X) ->
-    bcrypt:hashpw(binary_to_list(X), bcrypt:gen_salt());
+    convert_maru_password(X);
 convert(_, X) ->
     X.
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+convert_maru_password(X) ->
+    {ok, Salt} = bcrypt:gen_salt(),
+    {ok, PW} = bcrypt:hashpw(X, Salt),
+    PW.
