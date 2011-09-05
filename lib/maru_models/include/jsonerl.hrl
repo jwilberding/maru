@@ -19,7 +19,6 @@
 -define(struct_to_record(RecordName, Struct),
   % I use fun here in order to avoid possible variable collison by shaddowing them
   fun(PropList) ->
-          io:format("~p~n", [PropList]),
           RecordName:new(PropList)
   end(
     [{maru_model_utils:to_ex_a(K), V} || {K, V} <- element(1, Struct)]
