@@ -17,7 +17,10 @@
 %%% API
 %%%===================================================================
 
--spec is_valid(binary(), list()) -> true | false.
+-spec is_valid(binary() | list(), list()) -> true | false.
+is_valid(Username, Password) when is_list(Username),
+                                  is_list(Password) ->
+    is_valid(maru_model_types:convert(maru_string, Username), Password);
 is_valid(Username, Password) when is_binary(Username),
                                   is_list(Password) ->
     case maru_model_users:find([{username, Username}]) of
@@ -25,7 +28,7 @@ is_valid(Username, Password) when is_binary(Username),
             false;
         User ->
             UserPassword = maru_model_users:get(password, User),
-            UserPassword =:= bcrypt:hashpw(Password, UserPassword)
+            {ok, UserPassword} =:= bcrypt:hashpw(Password, UserPassword)
     end.
 
 %%%===================================================================

@@ -6,9 +6,11 @@
  %%% @end
  %%% Created :  5 Jul 2011 by Tristan Sloughter <>
  %%%-------------------------------------------------------------------
- -module(maru_model_sessions).
+-module(maru_model_sessions).
+-extends(maru_model_base).
 
- -include_lib("maru_models/include/maru_model.hrl").
+-include("maru_model.hrl").
+-include("jsonerl.hrl").
 
  %% API
  -export([is_valid/1]).

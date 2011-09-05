@@ -26,13 +26,12 @@
 -spec set_new_client_session_id(rd()) -> rd().
 set_new_client_session_id(ReqData) ->
     Session = new(),
-    ID = maru_model_sessions:get(id, Session),
-    maru_model_sessions:save(maru_model_sessions:set(id, Session, bcrypt:hashpw(ID,  bcrypt:gen_salt()))),
+    maru_model_sessions:save(Session),
     set_client_session_id(ReqData, Session).
 
 -spec set_client_session_id(rd(), record()) -> rd().
 set_client_session_id(ReqData, Session) ->
-    wrq:set_resp_header("Set-Cookie", "SESSIONID="++ maru_model_sessions:get(id, Session) ++"; Path=/", ReqData).
+    wrq:set_resp_header("Set-Cookie", "SESSIONID="++ binary_to_list(maru_model_sessions:get(id, Session)) ++"; Path=/", ReqData).
 
 -spec client_session_id(rd()) -> undefined | session_id().
 client_session_id(ReqData) ->

@@ -41,6 +41,10 @@
 %%% API
 %%%===================================================================
 
+convert(maru_string, X) when is_binary(X) ->
+    X;
+convert(maru_string, X) when is_list(X) ->
+    list_to_binary(X);
 convert(maru_password, X) when is_list(X) ->
     convert_maru_password(X);
 convert(maru_password, X) when is_binary(X) ->
