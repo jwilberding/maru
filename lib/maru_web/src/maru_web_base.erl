@@ -71,8 +71,6 @@ to_json(ReqData, Ctx) ->
 
 to_html(ReqData, Ctx) ->
     case wrq:path_info(type, ReqData) of
-        undefined ->
-            {{halt, 404}, ReqData, Ctx};
         "new" ->
             maru_web_utils:return_file("new.html", ReqData, Ctx);
         "edit" ->
