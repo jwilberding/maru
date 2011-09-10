@@ -22,14 +22,12 @@
 -include_lib("webmachine/include/webmachine.hrl").
 -include("maru_web.hrl").
 
--define(MODEL, model).
-
 %%%===================================================================
 %%% API
 %%%===================================================================
 -spec init(term()) -> {ok, record(ctx)}.
-init(_) ->
-    {ok, #ctx{}}.
+init(Model) ->
+    {ok, #ctx{model=Model}}.
 
 content_types_provided(ReqData, Ctx) ->
     {[{"application/json", to_json}, {"text/html", to_html}], ReqData, Ctx}.
@@ -48,8 +46,8 @@ process_post(ReqData, Ctx) ->
         undefined ->
             {false, ReqData, Ctx};
         JSON ->
-            Model = ?MODEL:to_record(JSON),
-            case ?MODEL:save(Model) of
+            Model = (Ctx#ctx.model):to_record(JSON),
+            case (Ctx#ctx.model):save(Model) of
                 error ->
                     {false, ReqData, Ctx};
                 _ ->
@@ -63,24 +61,28 @@ to_json(ReqData, Ctx) ->
         undefined ->
             {mochijson2:encode(null), ReqData, Ctx};
         ID ->
-            case ?MODEL:find({id, ID}) of
+            case (Ctx#ctx.model):find({id, ID}) of
                 not_found ->
                     {mochijson2:encode(null), ReqData, Ctx};
                 Model ->
-                    {?MODEL:to_json(Model), ReqData, Ctx}
+                    {(Ctx#ctx.model):to_json(Model), ReqData, Ctx}
             end
     end.
 
 to_html(ReqData, Ctx) ->
-    {ok, {priv, App}} = application:get_env(host_dir),
-    HostDir = code:priv_dir(App),
-    NewCtx = Ctx#ctx{docroot=HostDir},
-    case maru_web_utils:maybe_fetch_object(NewCtx, "user/new.html") of
-        {true, NewCtx2} ->
-            Body = NewCtx2#ctx.response_body,
-            {Body, ReqData, NewCtx2};
-        {false, NewCtx2} ->
-            {error, ReqData, NewCtx2}
+    case wrq:path_info(type, ReqData) of
+        undefined ->
+            {{halt, 404}, ReqData, Ctx};
+        "new" ->
+            case maru_web_utils:maybe_fetch_object(Ctx, "new.html") of
+                {true, NewCtx} ->
+                    Body = NewCtx#ctx.response_body,
+                    {Body, ReqData, NewCtx};
+                {false, NewCtx} ->
+                    {error, ReqData, NewCtx}
+            end;
+        _ ->
+            {{halt, 404}, ReqData, Ctx}
     end.
 
 from_json(ReqData, Ctx) ->
@@ -88,7 +90,7 @@ from_json(ReqData, Ctx) ->
         undefined ->
             {error, ReqData, Ctx};
         ID ->
-            case ?MODEL:find({id, ID}) of
+            case (Ctx#ctx.model):find({id, ID}) of
                 not_found ->
                     {error, ReqData, Ctx};
                 OldModel ->
@@ -96,9 +98,9 @@ from_json(ReqData, Ctx) ->
                         undefined ->
                             {error, ReqData, Ctx};
                         JSON ->
-                            Model = ?MODEL:to_record(JSON),
-                            ID = ?MODEL:get(id, OldModel),
-                            ?MODEL:save(?MODEL:set([{id, ID}], Model)),
+                            Model = (Ctx#ctx.model):to_record(JSON),
+                            ID = (Ctx#ctx.model):get(id, OldModel),
+                            (Ctx#ctx.model):save((Ctx#ctx.model):set([{id, ID}], Model)),
                             {<<"">>, ReqData, Ctx}
                     end
             end

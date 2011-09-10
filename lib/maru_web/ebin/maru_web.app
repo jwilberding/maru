@@ -9,6 +9,7 @@
 
               maru_web_utils,
               maru_web_static,
+              maru_web_base,
 
               maru_web_sessions,
               maru_web_authenticate,

@@ -22,39 +22,31 @@
 -include_lib("webmachine/include/webmachine.hrl").
 -include("maru_web.hrl").
 
+-define(MODEL, maru_model_users).
+
 %%%===================================================================
 %%% API
 %%%===================================================================
 -spec init(term()) -> {ok, record(ctx)}.
 init(_) ->
-    {ok, #ctx{}}.
+    {ok, {priv, App}} = application:get_env(host_dir),
+    HostDir = filename:join(code:priv_dir(App), "user"),
+    {ok, #ctx{model=?MODEL, docroot=HostDir}}.
 
 content_types_provided(ReqData, Ctx) ->
-    {[{"application/json", to_json}, {"text/html", to_html}], ReqData, Ctx}.
+    maru_web_base:content_types_provided(ReqData, Ctx).
 
 content_types_accepted(ReqData, Ctx) ->
-    {[{"application/json", from_json}], ReqData, Ctx}.
+    maru_web_base:content_types_accepted(ReqData, Ctx).
 
 allowed_methods(ReqData, Ctx) ->
-    {['HEAD', 'GET', 'POST', 'PUT'], ReqData, Ctx}.
+    maru_web_base:allowed_methods(ReqData, Ctx).
 
 resource_exists(ReqData, Ctx) ->
-    {true, ReqData, Ctx}.
+    maru_web_base:resource_exists(ReqData, Ctx).
 
 process_post(ReqData, Ctx) ->
-    case wrq:req_body(ReqData) of
-        undefined ->
-            {false, ReqData, Ctx};
-        UserJSON ->
-            User = maru_model_users:to_record(UserJSON),
-            case maru_model_users:save(User) of
-                error ->
-                    {false, ReqData, Ctx};
-                _ ->
-                    ReqData2 = wrq:append_to_response_body(UserJSON, ReqData),
-                    {true, ReqData2, Ctx}
-            end
-    end.
+    maru_web_base:process_post(ReqData, Ctx).
 
 to_json(ReqData, Ctx) ->
     case wrq:path_info(type, ReqData) of
@@ -77,37 +69,10 @@ to_json(ReqData, Ctx) ->
     end.
 
 to_html(ReqData, Ctx) ->
-    {ok, {priv, App}} = application:get_env(host_dir),
-    HostDir = code:priv_dir(App),
-    NewCtx = Ctx#ctx{docroot=HostDir},
-    case maru_web_utils:maybe_fetch_object(NewCtx, "user/new.html") of
-        {true, NewCtx2} ->
-            Body = NewCtx2#ctx.response_body,
-            {Body, ReqData, NewCtx2};
-        {false, NewCtx2} ->
-            {error, ReqData, NewCtx2}
-    end.
+    maru_web_base:to_html(ReqData, Ctx).
 
 from_json(ReqData, Ctx) ->
-    case wrq:path_info(username, ReqData) of
-        undefined ->
-            {error, ReqData, Ctx};
-        Username ->
-            case maru_model_users:find({username, list_to_binary(Username)}) of
-                not_found ->
-                    {error, ReqData, Ctx};
-                OldUser ->
-                    case wrq:req_body(ReqData) of
-                        undefined ->
-                            {error, ReqData, Ctx};
-                        UserJSON ->
-                            User = maru_model_users:to_record(UserJSON),
-                            ID = maru_model_users:get(id, OldUser),
-                            maru_model_users:save(maru_model_users:set([{id, ID}], User)),
-                            {<<"">>, ReqData, Ctx}
-                    end
-            end
-    end.
+    maru_web_base:from_json(ReqData, Ctx).
 
 %%%===================================================================
 %%% Internal functions
