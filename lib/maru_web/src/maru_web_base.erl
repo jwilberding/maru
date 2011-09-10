@@ -74,13 +74,11 @@ to_html(ReqData, Ctx) ->
         undefined ->
             {{halt, 404}, ReqData, Ctx};
         "new" ->
-            case maru_web_utils:maybe_fetch_object(Ctx, "new.html") of
-                {true, NewCtx} ->
-                    Body = NewCtx#ctx.response_body,
-                    {Body, ReqData, NewCtx};
-                {false, NewCtx} ->
-                    {error, ReqData, NewCtx}
-            end;
+            maru_web_utils:return_file("new.html", ReqData, Ctx);
+        "edit" ->
+            maru_web_utils:return_file("edit.html", ReqData, Ctx);
+        "show" ->
+            maru_web_utils:return_file("show.html", ReqData, Ctx);
         _ ->
             {{halt, 404}, ReqData, Ctx}
     end.
@@ -105,3 +103,7 @@ from_json(ReqData, Ctx) ->
                     end
             end
     end.
+
+%%%===================================================================
+%%% Internal functions
+%%%===================================================================

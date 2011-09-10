@@ -12,7 +12,8 @@
 -include_lib("kernel/include/file.hrl").
 
 %% API
--export([maybe_fetch_object/3,
+-export([return_file/3,
+         maybe_fetch_object/3,
          maybe_fetch_object/2,
          file_exists/2,
          get_full_path/2]).
@@ -20,6 +21,16 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+return_file(Filename, ReqData, Ctx) ->
+    case maru_web_utils:maybe_fetch_object(Ctx, Filename) of
+        {true, NewCtx} ->
+            Body = NewCtx#ctx.response_body,
+            {Body, ReqData, NewCtx};
+        {false, NewCtx} ->
+            {error, ReqData, NewCtx}
+    end.
+
+
 maybe_fetch_object(Ctx, Template, Path) ->
     % if returns {true, NewCtx} then NewCtx has response_body
     case Ctx#ctx.response_body of
