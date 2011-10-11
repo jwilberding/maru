@@ -17,13 +17,16 @@
 ).
 
 -define(struct_to_record(RecordName, Struct),
-  % I use fun here in order to avoid possible variable collison by shaddowing them
-  fun(PropList) ->
-          RecordName:new(PropList)
-  end(
-    [{maru_model_utils:to_ex_a(K), V} || {K, V} <- element(1, Struct)]
-  )
-).
+	begin
+	    {[{_, {NewStruct}}]} = Struct,
+	    % I use fun here in order to avoid possible variable collison by shaddowing them
+	    fun(PropList) ->
+		    RecordName:new(PropList)
+	    end(
+	      [{maru_model_utils:to_ex_a(K), V} || {K, V} <- NewStruct]
+	     )
+	end
+       ).
 
 -define(record_to_json(RecordName, Record),
   % serialize erlang struct into json string

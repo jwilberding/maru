@@ -49,7 +49,7 @@ find(Tab, PropList) ->
            ?FUN(mnesia:match_object(Obj))) of
         {atomic, []} ->
             not_found;
-        {atomic, [Result]} ->
+        {atomic, Result} ->
             Result;
         _ ->
             error
