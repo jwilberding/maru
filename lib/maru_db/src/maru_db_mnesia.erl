@@ -39,6 +39,7 @@ start_link() ->
 
 %% @private
 init([]) ->
+    mnesia:create_schema([node()]),
     ok = mnesia:start(),
     {ok, #state{}}.
 

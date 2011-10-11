@@ -30,7 +30,7 @@ all(Tab) ->
     end.
 
 create_table(Name, Fields) ->
-    mnesia:create_table(Name, [{attributes, Fields}]).
+    mnesia:create_table(Name, [{disc_copies, [node()]}, {attributes, Fields}]).
 
 store(Record) when not(is_list(Record))->
     store([Record]);

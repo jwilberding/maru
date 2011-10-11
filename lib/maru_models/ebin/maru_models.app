@@ -11,6 +11,6 @@
               maru_model_sessions,
               maru_model_utils]},
    {registered,[]},
-   {applications, [kernel, stdlib, sasl, crypto, bcrypt, ossp_uuid, jiffy]},
+   {applications, [kernel, stdlib, sasl, crypto, bcrypt, ossp_uuid, jiffy, maru_db]},
    {start_phases, []}]}.
 
