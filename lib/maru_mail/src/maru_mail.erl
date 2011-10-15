@@ -21,7 +21,7 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {relay, username, password}).
+-record(state, {relay, username, password, port}).
 
 %%%===================================================================
 %%% Public Types
@@ -43,11 +43,9 @@ start_link() ->
 
 %% @private
 init([]) ->
-    Relay = application:get_env(relay),
-    Username = application:get_env(username),
-    Password = application:get_env(password),
+    {ok, Relay} = application:get_env(relay),
 
-    {ok, #state{relay=Relay, username=Username, password=Password}}.
+    {ok, #state{relay=Relay}}.
 
 %% @private
 handle_call(_Request, _From, State) ->
@@ -55,10 +53,10 @@ handle_call(_Request, _From, State) ->
     {reply, Reply, State}.
 
 %% @private
-handle_cast({send, From, To, Subject, Body}, State=#state{relay=Relay, username=Username, password=Password}) ->
-    Body = io_lib:format("Subject: ~s\r\nFrom: ~s \r\nTo: ~s \r\n\r\n~s", [Subject, From, To, Body]),
-    gen_smtp_client:send({From, To, Body},
-			 [{relay, Relay}, {username, Username}, {password, Password}]),
+handle_cast({send, From, To, Subject, Body}, State=#state{relay=Relay}) ->
+    Email = io_lib:format("Subject: ~s\r\nFrom: ~s \r\nTo: ~s \r\n\r\n~s", [Subject, From, To, Body]),
+    gen_smtp_client:send({From, To, Email},
+			 [{relay, Relay}]),
     {noreply, State}.
 
 %% @private
