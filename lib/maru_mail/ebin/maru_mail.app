@@ -5,6 +5,7 @@
   [{description, "maru email library"},
    {vsn, "0.1.0"},
    {modules, [maru_mail]},
-   {registered,[]},
+   {registered, [maru_mail_sup]},
    {applications, [kernel, stdlib, ssl, gen_smtp]},
+   {mod, {maru_mail_app,[]}},
    {start_phases, []}]}.
