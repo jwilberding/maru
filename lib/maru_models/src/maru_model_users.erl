@@ -9,8 +9,8 @@
 -module(maru_model_users).
 -extends(maru_model_base).
 
--include("maru_model.hrl").
--include("jsonerl.hrl").
+-include_lib("maru_models/include/maru_model.hrl").
+-include_lib("maru_models/include/jsonerl.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
 %% API
@@ -67,4 +67,3 @@ user_json_test() ->
 
     User2 = lists:flatten(io_lib:format("~s", [to_json(User)])),
     ?assertEqual(User2, JSON).
-

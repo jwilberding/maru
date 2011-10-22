@@ -20,7 +20,7 @@
          from_json/2]).
 
 -include_lib("webmachine/include/webmachine.hrl").
--include("maru_web.hrl").
+-include_lib("maru_web/include/maru_web.hrl").
 
 %%%===================================================================
 %%% API

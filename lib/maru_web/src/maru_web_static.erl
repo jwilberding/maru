@@ -6,7 +6,7 @@
          content_types_provided/2,
          provide_content/2]).
 
--include("maru_web.hrl").
+-include_lib("maru_web/include/maru_web.hrl").
 
 -include_lib("webmachine/include/webmachine.hrl").
 -include_lib("kernel/include/file.hrl").
@@ -37,4 +37,3 @@ provide_content(ReqData, Ctx) ->
         {false, NewCtx} ->
             {error, ReqData, NewCtx}
     end.
-

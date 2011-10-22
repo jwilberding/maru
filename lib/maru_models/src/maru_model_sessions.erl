@@ -9,8 +9,8 @@
 -module(maru_model_sessions).
 -extends(maru_model_base).
 
--include("maru_model.hrl").
--include("jsonerl.hrl").
+-include_lib("maru_models/include/maru_model.hrl").
+-include_lib("maru_models/include/jsonerl.hrl").
 
  %% API
  -export([is_valid/1]).
@@ -51,5 +51,3 @@ expired(Session) ->
 %%%===================================================================
 %%% Test functions
 %%%===================================================================
-
-

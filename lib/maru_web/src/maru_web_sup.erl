@@ -50,7 +50,16 @@ init([]) ->
 
 config() ->
     {ok, IP} = application:get_env(webmachine_ip),
-    {ok, Port} = application:get_env(webmachine_port),
+
+    Port = case application:get_env(webmachine_port) of
+	       {ok, P} ->
+		   P;
+	       _ ->
+		   {ok, Binary} = file:read_file("/home/tristan/environment.json"),
+		   {PropList} = jiffy:decode(Binary),
+		   proplists:get_value(<<"PORT_WWW">>, PropList, 8080)
+	   end,
+
     {ok, App} = application:get_application(),
     LogDir = filename:join(code:priv_dir(App), "logs"),
 

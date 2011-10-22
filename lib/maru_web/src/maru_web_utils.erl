@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(maru_web_utils).
 
--include("maru_web.hrl").
+-include_lib("maru_web/include/maru_web.hrl").
 -include_lib("kernel/include/file.hrl").
 
 %% API
