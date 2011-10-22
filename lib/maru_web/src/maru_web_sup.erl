@@ -55,7 +55,7 @@ config() ->
 	       {ok, P} ->
 		   P;
 	       _ ->
-		   {ok, Binary} = file:read_file("/home/tristan/environment.json"),
+		   {ok, Binary} = file:read_file("/home/dotcloud/environment.json"),
 		   {PropList} = jiffy:decode(Binary),
 		   proplists:get_value(<<"PORT_WWW">>, PropList, 8080)
 	   end,
