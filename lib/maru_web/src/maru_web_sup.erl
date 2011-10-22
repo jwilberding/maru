@@ -55,9 +55,14 @@ config() ->
 	       {ok, P} ->
 		   P;
 	       _ ->
-		   {ok, Binary} = file:read_file("/home/dotcloud/environment.json"),
-		   {PropList} = jiffy:decode(Binary),
-		   proplists:get_value(<<"PORT_WWW">>, PropList, 8080)
+		   Home = os:getenv("HOME"),
+		   case file:read_file(filename:join(Home, "environment.json")) of
+		       {ok, Binary} ->
+			   {PropList} = jiffy:decode(Binary),
+			   proplists:get_value(<<"PORT_WWW">>, PropList, 8080);
+		       _ ->
+			   8080
+		   end
 	   end,
 
     {ok, App} = application:get_application(),
