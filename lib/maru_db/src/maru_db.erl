@@ -32,10 +32,20 @@ all(Tab) ->
 create_table(Name, Fields) ->
     mnesia:create_table(Name, [{disc_copies, [node()]}, {attributes, Fields}]).
 
+% store(Record) when not(is_list(Record))->
+%     store([Record]);
+% store(Records) when is_list(Records)->
+%     case mnesia:transaction(?FUN(lists:foreach(?FUN1(mnesia:write(X)), Records))) of
+%         {atomic, ok} ->
+%             ok;
+%         _ ->
+%             error
+%     end.
+
 store(Record) when not(is_list(Record))->
     store([Record]);
 store(Records) when is_list(Records)->
-    case mnesia:transaction(?FUN(lists:foreach(?FUN1(mnesia:write(X)), Records))) of
+    case mnesia:transaction(?FUN(lists:foreach(?FUN1(write_unique(X)), Records))) of
         {atomic, ok} ->
             ok;
         _ ->
@@ -77,3 +87,13 @@ match_spec(Tab, PropList) ->
 
 wildcard_match_spec(Tab) ->
     lists:map(?FUN1({X, '_'}), Tab:fields()).
+
+write_unique(V) ->
+    Tab = element(1, V),
+    Key = element(2, V),
+    case mnesia:wread({Tab, Key}) of
+	[Exist] ->
+	    mnesia:abort(Exist);
+	_ ->
+	    mnesia:write(V)
+    end.
