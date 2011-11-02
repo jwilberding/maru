@@ -59,7 +59,13 @@ process_post(ReqData, Ctx) ->
 to_json(ReqData, Ctx) ->
     case wrq:path_info(type, ReqData) of
         undefined ->
-            {mochijson2:encode(null), ReqData, Ctx};
+	    Models = lists:foldr(fun(X, <<"">>) ->
+					 X;
+				    (X, Acc) ->
+					 <<Acc/binary, ",", X/binary>>
+				 end, <<"">>, [(Ctx#ctx.model):to_json(Model) || Model <- (Ctx#ctx.model):all()]),
+
+            {<<"[", Models/binary, "]">>, ReqData, Ctx};
         ID ->
             case (Ctx#ctx.model):find({id, ID}) of
                 not_found ->
@@ -73,6 +79,8 @@ to_html(ReqData, Ctx) ->
     case wrq:path_info(type, ReqData) of
         "new" ->
             maru_web_utils:return_file("new.html", ReqData, Ctx);
+	"list" ->
+            maru_web_utils:return_file("list.html", ReqData, Ctx);
         "edit" ->
             maru_web_utils:return_file("edit.html", ReqData, Ctx);
         "show" ->

@@ -1,8 +1,7 @@
 -define(record_to_struct(RecordName, Record),
   % we are zipping record's field names and corresponding values together
   % then we turn it into tuple resulting in *struct* - erlang's equivalent of json's *object*
-  list_to_tuple(
-    lists:zip(
+  {lists:zip(
       lists:map(fun(F) -> list_to_binary(atom_to_list(F)) end, record_info(fields, RecordName)),
       lists:map(
         %% convention record's *undefined* value is represented as json's *null*
@@ -13,7 +12,7 @@
         tl(tuple_to_list(Record))
       )
     )
-  )
+  }
 ).
 
 -define(struct_to_record(RecordName, Struct),

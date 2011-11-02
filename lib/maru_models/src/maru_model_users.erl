@@ -50,8 +50,7 @@ to_record(JSON) ->
 
 user_creation_test() ->
     User = new([{id, <<"TEST1">>},
-                 {firstname, <<"UserFirst1">>},
-                 {lastname, <<"UserLast1">>},
+                 {fullname, <<"User1">>},
                  {username, <<"UserName1">>},
                  {email, <<"UserEmail@example.com">>},
                  {password, <<"UserPassword1">>},
@@ -61,9 +60,9 @@ user_creation_test() ->
 
 
 user_json_test() ->
-    JSON = "{\"id\":null,\"firstname\":null,\"lastname\":null,\"username\":\"UserName2\",\"email\":null,\"password\":null,\"accounts\":null}",
+    JSON = <<"{\"maru_model_users\":{\"id\":null,\"fullname\":null,\"username\":\"UserName2\",\"email\":null,\"password\":null,\"accounts\":null}}">>,
     User = to_record(JSON),
     ?assertEqual(get(username, User), <<"UserName2">>),
 
-    User2 = lists:flatten(io_lib:format("~s", [to_json(User)])),
+    User2 = list_to_binary(lists:flatten(io_lib:format("~s", [to_json(User)]))),
     ?assertEqual(User2, JSON).

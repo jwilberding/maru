@@ -12,6 +12,7 @@
 
 %% API
 -export([all/1,
+	 all_keys/1,
 	 create_table/2,
          store/1,
          find/2,
@@ -22,6 +23,14 @@
 %%%===================================================================
 
 all(Tab) ->
+    case find(Tab, []) of
+	not_found ->
+	    [];
+	All ->
+	   All
+    end.
+
+all_keys(Tab) ->
     case mnesia:transaction(?FUN(mnesia:all_keys(Tab))) of
 	{atomic, Keys} ->
 	    Keys;
