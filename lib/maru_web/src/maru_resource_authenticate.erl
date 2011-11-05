@@ -39,11 +39,11 @@ process_post(ReqData, Ctx) ->
     RememberMe = maru_web_utils:checkbox_value_to_bool(wrq:get_qs_value("remember_me", ReqData)),
 
     case maru_web_authenticate:is_valid(Username, Password) of
-        true ->
-            Cookie = maru_web_sessions:set_new_client_session_id(RememberMe),
+        {true, UserId} ->
+            Cookie = maru_web_sessions:set_new_client_session_id(RememberMe, UserId),
 	    NewReqData = wrq:set_resp_header("Set-Cookie", Cookie, ReqData),
             {true, NewReqData, Ctx};
-        false ->
+        {false, _} ->
             {false, ReqData, Ctx}
     end.
 

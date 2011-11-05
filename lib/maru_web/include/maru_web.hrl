@@ -1,2 +1,2 @@
 
--record(ctx, {session_id, username, docroot, fullpath, fileinfo, response_body, model}).
+-record(ctx, {session_id, user_id, docroot, fullpath, fileinfo, response_body, model}).

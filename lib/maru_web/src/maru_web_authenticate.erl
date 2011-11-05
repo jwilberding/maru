@@ -28,7 +28,8 @@ is_valid(Username, Password) when is_binary(Username),
             false;
         [User] ->
             UserPassword = maru_model_users:get(password, User),
-            {ok, UserPassword} =:= bcrypt:hashpw(Password, UserPassword)
+	    UserId = maru_model_users:get(id, User),
+            {{ok, UserPassword} =:= bcrypt:hashpw(Password, UserPassword), UserId}
     end.
 
 %%%===================================================================

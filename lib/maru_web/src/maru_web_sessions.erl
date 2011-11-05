@@ -9,8 +9,10 @@
 -module(maru_web_sessions).
 
 %% API
--export([set_new_client_session_id/1,
-         client_session_id/1]).
+-export([set_new_client_session_id/2,
+	 get_user_id/1,
+         client_session_id/1,
+	 is_valid/1]).
 
 -export_type([session_id/0,
               rd/0]).
@@ -22,9 +24,9 @@
 %%% API
 %%%===================================================================
 
--spec set_new_client_session_id(string()) -> string().
-set_new_client_session_id(RememberMe) ->
-    Session = maru_model_sessions:new(),
+-spec set_new_client_session_id(string(), maru_model_types:maru_key()) -> string().
+set_new_client_session_id(RememberMe, UserId) ->
+    Session = maru_model_sessions:new([{user_id, UserId}]),
     maru_model_sessions:save(Session),
     maru_model_sessions:get_session_cookie(RememberMe, Session).
 
@@ -36,6 +38,15 @@ client_session_id(ReqData) ->
         SessionIDString ->
             list_to_binary(SessionIDString)
     end.
+
+get_user_id(ReqData) ->
+    SessionId = client_session_id(ReqData),
+    [Session] = maru_model_sessions:find([{id, SessionId}]),
+    maru_model_sessions:get_user_id(Session).
+
+is_valid(ReqData) ->
+    SessionId = client_session_id(ReqData),
+    maru_model_sessions:is_valid(SessionId).
 
 %%%===================================================================
 %%% Internal functions
