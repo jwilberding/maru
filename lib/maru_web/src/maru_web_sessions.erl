@@ -42,7 +42,7 @@ client_session_id(ReqData) ->
 get_user_id(ReqData) ->
     SessionId = client_session_id(ReqData),
     [Session] = maru_model_sessions:find([{id, SessionId}]),
-    maru_model_sessions:get_user_id(Session).
+    maru_model_sessions:get(user_id, Session).
 
 is_valid(ReqData) ->
     SessionId = client_session_id(ReqData),

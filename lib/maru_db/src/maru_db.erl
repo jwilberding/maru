@@ -14,6 +14,7 @@
 -export([all/1,
 	 all_keys/1,
 	 create_table/2,
+	 update/1,
          store/1,
          find/2,
          match/2]).
@@ -55,6 +56,16 @@ store(Record) when not(is_list(Record))->
     store([Record]);
 store(Records) when is_list(Records)->
     case mnesia:transaction(?FUN(lists:foreach(?FUN1(write_unique(X)), Records))) of
+        {atomic, ok} ->
+            ok;
+        _ ->
+            error
+    end.
+
+update(Record) when not(is_list(Record))->
+    update([Record]);
+update(Records) when is_list(Records)->
+    case mnesia:transaction(?FUN(lists:foreach(?FUN1(mnesia:write(X)), Records))) of
         {atomic, ok} ->
             ok;
         _ ->

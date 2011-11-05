@@ -39,10 +39,10 @@ get_session_cookie(false, Session) ->
 
 -spec is_valid(list()) -> true | false.
 is_valid(SessionID) ->
-    case maru_db:get(?MODULE, SessionID) of
+    case find({id, SessionID}) of
         not_found ->
             false;
-        Session ->
+        [Session] ->
             not(expired(Session))
     end.
 
