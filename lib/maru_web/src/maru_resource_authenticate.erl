@@ -36,10 +36,12 @@ resource_exists(ReqData, Ctx) ->
 process_post(ReqData, Ctx) ->
     Username = wrq:get_qs_value("username", ReqData),
     Password = wrq:get_qs_value("password", ReqData),
+    RememberMe = maru_web_utils:checkbox_value_to_bool(wrq:get_qs_value("remember_me", ReqData)),
 
     case maru_web_authenticate:is_valid(Username, Password) of
         true ->
-            NewReqData = maru_web_sessions:set_new_client_session_id(ReqData),
+            Cookie = maru_web_sessions:set_new_client_session_id(RememberMe),
+	    NewReqData = wrq:set_resp_header("Set-Cookie", Cookie, ReqData),
             {true, NewReqData, Ctx};
         false ->
             {false, ReqData, Ctx}

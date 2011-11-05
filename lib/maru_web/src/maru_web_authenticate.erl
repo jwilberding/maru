@@ -26,7 +26,7 @@ is_valid(Username, Password) when is_binary(Username),
     case maru_model_users:find([{username, Username}]) of
         not_found ->
             false;
-        User ->
+        [User] ->
             UserPassword = maru_model_users:get(password, User),
             {ok, UserPassword} =:= bcrypt:hashpw(Password, UserPassword)
     end.
@@ -39,4 +39,3 @@ is_valid(Username, Password) when is_binary(Username),
 %%%===================================================================
 %%% Test functions
 %%%===================================================================
-

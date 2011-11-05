@@ -10,7 +10,6 @@
 
 %% API
 -export([set_new_client_session_id/1,
-         set_client_session_id/2,
          client_session_id/1]).
 
 -export_type([session_id/0,
@@ -23,15 +22,11 @@
 %%% API
 %%%===================================================================
 
--spec set_new_client_session_id(rd()) -> rd().
-set_new_client_session_id(ReqData) ->
-    Session = new(),
+-spec set_new_client_session_id(string()) -> string().
+set_new_client_session_id(RememberMe) ->
+    Session = maru_model_sessions:new(),
     maru_model_sessions:save(Session),
-    set_client_session_id(ReqData, Session).
-
--spec set_client_session_id(rd(), record()) -> rd().
-set_client_session_id(ReqData, Session) ->
-    wrq:set_resp_header("Set-Cookie", "SESSIONID="++ binary_to_list(maru_model_sessions:get(id, Session)) ++"; Path=/", ReqData).
+    maru_model_sessions:get_session_cookie(RememberMe, Session).
 
 -spec client_session_id(rd()) -> undefined | session_id().
 client_session_id(ReqData) ->
@@ -45,7 +40,3 @@ client_session_id(ReqData) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-
--spec new() -> session_id().
-new() ->
-    maru_model_sessions:new().

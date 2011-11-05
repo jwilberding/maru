@@ -12,7 +12,8 @@
 -include_lib("kernel/include/file.hrl").
 
 %% API
--export([return_file/3,
+-export([checkbox_value_to_bool/1,
+	 return_file/3,
          maybe_fetch_object/3,
          maybe_fetch_object/2,
          file_exists/2,
@@ -21,6 +22,14 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+
+checkbox_value_to_bool(undefined) ->
+    false;
+checkbox_value_to_bool("on") ->
+    true;
+checkbox_value_to_bool("off") ->
+    false.
+
 return_file(Filename, ReqData, Ctx) ->
     case maru_web_utils:maybe_fetch_object(Ctx, Filename) of
         {true, NewCtx} ->

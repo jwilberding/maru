@@ -13,19 +13,24 @@
 -include_lib("maru_models/include/jsonerl.hrl").
 
  %% API
- -export([is_valid/1]).
+ -export([get_session_cookie/2,
+	 is_valid/1]).
 
  -record(maru_model_sessions, {id = ossp_uuid:make(v1, text)    :: maru_model_types:maru_key(),
                                user_id                          :: maru_model_types:maru_key(),
                                created=idioms:time_in_seconds() :: integer()}).
 
-%% never expire session
--define(INFINTE_SESSION, true).
--define(EXPIRE, infinity).
+-define(EXPIRE, 1209600). %% 2 weeks
 
 %%%===================================================================
 %%% API
 %%%===================================================================
+
+
+get_session_cookie(true, Session) ->
+    get_session_cookie_(Session, [{max_age, ?EXPIRE}, {path, "/"}]);
+get_session_cookie(false, Session) ->
+    get_session_cookie_(Session, [{path, "/"}]).
 
 -spec is_valid(list()) -> true | false.
 is_valid(SessionID) ->
@@ -40,13 +45,13 @@ is_valid(SessionID) ->
 %%% Internal functions
 %%%===================================================================
 
--ifdef(INFINITE_SESSION).
-expired(_Session) ->
-    false.
--else.
 expired(Session) ->
     (idioms:time_in_seconds() - Session#maru_model_sessions.created) > ?EXPIRE.
--endif.
+
+
+get_session_cookie_(Session, Options) ->
+    {_, Value} = mochiweb_cookies:cookie("SESSIONID", binary_to_list(maru_model_sessions:get(id, Session)), Options),
+    Value.
 
 %%%===================================================================
 %%% Test functions
