@@ -6,7 +6,7 @@
 %%% @end
 %%% Created :  6 Jul 2011 by Tristan Sloughter <>
 %%%-------------------------------------------------------------------
--module(idioms).
+-module(maru_idioms).
 
 %% API
 -export([time_in_seconds/0]).

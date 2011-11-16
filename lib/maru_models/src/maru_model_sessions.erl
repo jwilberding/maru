@@ -19,7 +19,7 @@
 
  -record(maru_model_sessions, {id = ossp_uuid:make(v1, text)    :: maru_model_types:maru_key(),
                                user_id                          :: maru_model_types:maru_key(),
-                               created=idioms:time_in_seconds() :: integer()}).
+                               created=maru_idioms:time_in_seconds() :: integer()}).
 
 -define(EXPIRE, 1209600). %% 2 weeks
 
@@ -51,7 +51,7 @@ is_valid(SessionID) ->
 %%%===================================================================
 
 expired(Session) ->
-    (idioms:time_in_seconds() - Session#maru_model_sessions.created) > ?EXPIRE.
+    (maru_idioms:time_in_seconds() - Session#maru_model_sessions.created) > ?EXPIRE.
 
 
 get_session_cookie_(Session, Options) ->

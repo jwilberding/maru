@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(maru_db).
 
--include_lib("idioms/include/idioms.hrl").
+-include_lib("maru_idioms/include/maru_idioms.hrl").
 
 %% API
 -export([all/1,
