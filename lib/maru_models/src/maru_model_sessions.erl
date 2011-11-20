@@ -15,6 +15,7 @@
  %% API
  -export([find/1,
 	  get_session_cookie/2,
+	  delete/1,
 	  is_valid/1]).
 
  -record(maru_model_sessions, {id = ossp_uuid:make(v1, text)    :: maru_model_types:maru_key(),
@@ -36,6 +37,9 @@ get_session_cookie(true, Session) ->
     get_session_cookie_(Session, [{max_age, ?EXPIRE}, {path, "/"}]);
 get_session_cookie(false, Session) ->
     get_session_cookie_(Session, [{path, "/"}]).
+
+delete(Key) ->
+    maru_db:delete(?MODULE, Key).
 
 -spec is_valid(list()) -> true | false.
 is_valid(SessionID) ->

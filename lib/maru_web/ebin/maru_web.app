@@ -15,6 +15,7 @@
               maru_web_authenticate,
 
               maru_resource_authenticate,
+	      maru_resource_logout,
               maru_resource_user]},
    {registered,[maru_web_sup]},
    {applications, [kernel, stdlib, webmachine, maru_models, erlydtl]},

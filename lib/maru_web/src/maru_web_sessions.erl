@@ -10,6 +10,7 @@
 
 %% API
 -export([set_new_client_session_id/2,
+	 logout/1,
 	 get_user_id/1,
          client_session_id/1,
 	 is_valid/1]).
@@ -29,6 +30,17 @@ set_new_client_session_id(RememberMe, UserId) ->
     Session = maru_model_sessions:new([{user_id, UserId}]),
     maru_model_sessions:save(Session),
     maru_model_sessions:get_session_cookie(RememberMe, Session).
+
+logout(ReqData) ->
+    case wrq:get_cookie_value("SESSIONID", ReqData) of
+        undefined ->
+            undefined;
+        SessionIDString ->
+            SessionId = list_to_binary(SessionIDString),
+	    maru_model_sessions:delete(SessionId),
+	    {_, Cookie} = mochiweb_cookies:cookie("SESSIONID", "expired", [{path, "/"}, {max_age, 0}]),
+	    wrq:set_resp_header("Set-Cookie", Cookie, ReqData)
+    end.
 
 -spec client_session_id(rd()) -> undefined | session_id().
 client_session_id(ReqData) ->

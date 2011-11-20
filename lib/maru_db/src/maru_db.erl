@@ -15,6 +15,7 @@
 	 all_keys/1,
 	 create_table/2,
 	 update/1,
+	 delete/2,
          store/1,
          find/2,
          match/2]).
@@ -71,6 +72,9 @@ update(Records) when is_list(Records)->
         _ ->
             error
     end.
+
+delete(Tab, Key) ->
+    mnesia:dirty_delete(Tab, Key).
 
 -spec find(atom(), list(tuple())) -> record().
 find(Tab, PropList) ->
