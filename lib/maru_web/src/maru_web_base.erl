@@ -59,18 +59,18 @@ process_post(ReqData, Ctx) ->
 to_json(ReqData, Ctx) ->
     case wrq:path_info(type, ReqData) of
         undefined ->
-	    Models = lists:foldr(fun(X, <<"">>) ->
-					 X;
-				    (X, Acc) ->
-					 <<Acc/binary, ",", X/binary>>
-				 end, <<"">>, [(Ctx#ctx.model):to_json(Model) || Model <- (Ctx#ctx.model):all()]),
+            Models = lists:foldr(fun(X, <<"">>) ->
+                                         X;
+                                    (X, Acc) ->
+                                         <<Acc/binary, ",", X/binary>>
+                                             end, <<"">>, [(Ctx#ctx.model):to_json(Model) || Model <- (Ctx#ctx.model):all()]),
 
             {<<"[", Models/binary, "]">>, ReqData, Ctx};
         ID ->
-            case (Ctx#ctx.model):find({id, ID}) of
+            case (Ctx#ctx.model):find({id, list_to_binary(ID)}) of
                 not_found ->
                     {mochijson2:encode(null), ReqData, Ctx};
-                Model ->
+                [Model] ->
                     {(Ctx#ctx.model):to_json(Model), ReqData, Ctx}
             end
     end.
