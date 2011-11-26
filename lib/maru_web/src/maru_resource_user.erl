@@ -57,14 +57,15 @@ to_json(ReqData, Ctx) ->
         _ ->
             case wrq:path_info(type, ReqData) of
                 undefined ->
-		    Models = [(Ctx#ctx.model):to_json(Model) || Model <- (Ctx#ctx.model):find([])],
+                    Models = [(Ctx#ctx.model):to_json(Model) || Model <- (Ctx#ctx.model):find([])],
                     {Models, ReqData, Ctx};
                 Username ->
                     case maru_model_users:find({username, list_to_binary(Username)}) of
                         not_found ->
                             {mochijson2:encode(null), ReqData, Ctx};
-                        User ->
-                            {maru_model_users:to_json(User), ReqData, Ctx}
+                        [User] ->
+                            NewUser = (Ctx#ctx.model):set([{password, <<"">>}], User),
+                            {maru_model_users:to_json(NewUser), ReqData, Ctx}
                     end
             end
     end.
