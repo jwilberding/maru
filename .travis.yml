@@ -1,0 +1,12 @@
+language: erlang
+
+otp_release:
+   - R14B04
+
+before_script: "./deps"
+
+script: "./sinan test"
+
+notifications:
+   recipients:
+      - tristan.sloughter@gmail.com
