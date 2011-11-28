@@ -3,7 +3,7 @@
 agner install proper -v 1.0 --indices '[{github,"claimstrade"}, {github, "agner"}]'
 agner install mochiweb -v 1.5.0 --indices '[{github,"claimstrade"}, {github, "agner"}]'
 agner install webmachine -v 1.8.0 --indices '[{github,"claimstrade"}, {github, "agner"}]'
-agner install bcrypt -v 0.2 --indices '[{github,"claimstrade"}, {github, "agner"}]'
+agner install bcrypt -v 0.4.1 --indices '[{github,"claimstrade"}, {github, "agner"}]'
 agner install jiffy -v 0.2.0 --indices '[{github,"claimstrade"}, {github, "agner"}]'
 agner install erlydtl -v 0.7.0 --indices '[{github,"claimstrade"}, {github, "agner"}]'
 agner install gen_smtp -v 0.1 --indices '[{github,"claimstrade"}, {github, "agner"}]'

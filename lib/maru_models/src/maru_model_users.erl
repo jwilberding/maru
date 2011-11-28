@@ -22,8 +22,7 @@
                            fullname                      :: maru_model_types:maru_string(),
                            username                      :: maru_model_types:maru_string(),
                            email                         :: maru_model_types:maru_email(),
-                           password                      :: maru_model_types:maru_password(),
-                           accounts=[]                   :: [maru_model_types:maru_key()]}).
+                           password                      :: maru_model_types:maru_password()}).
 
 %%%===================================================================
 %%% API
@@ -53,14 +52,13 @@ user_creation_test() ->
                  {fullname, <<"User1">>},
                  {username, <<"UserName1">>},
                  {email, <<"UserEmail@example.com">>},
-                 {password, <<"UserPassword1">>},
-                 {accounts, []}]),
+                 {password, <<"UserPassword1">>}]),
 
     ?assertEqual(get(username, User), <<"UserName1">>).
 
 
 user_json_test() ->
-    JSON = <<"{\"maru_model_users\":{\"id\":null,\"fullname\":null,\"username\":\"UserName2\",\"email\":null,\"password\":null,\"accounts\":null}}">>,
+    JSON = <<"{\"maru_model_users\":{\"id\":null,\"fullname\":null,\"username\":\"UserName2\",\"email\":null,\"password\":null}}">>,
     User = to_record(JSON),
     ?assertEqual(get(username, User), <<"UserName2">>),
 
