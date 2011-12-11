@@ -79,7 +79,7 @@ to_html(ReqData, Ctx) ->
     case wrq:path_info(type, ReqData) of
         "new" ->
             maru_web_utils:return_file("new.html", ReqData, Ctx);
-	"list" ->
+        "list" ->
             maru_web_utils:return_file("list.html", ReqData, Ctx);
         "edit" ->
             maru_web_utils:return_file("edit.html", ReqData, Ctx);

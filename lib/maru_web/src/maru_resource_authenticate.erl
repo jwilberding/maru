@@ -11,8 +11,10 @@
 %% API
 -export([init/1,
          allowed_methods/2,
+         content_types_provided/2,
          resource_exists/2,
-         process_post/2]).
+         process_post/2,
+         to_json/2]).
 
 -include_lib("webmachine/include/webmachine.hrl").
 -include_lib("maru_web/include/maru_web.hrl").
@@ -26,7 +28,10 @@ init(_) ->
 
 -spec allowed_methods(term(), term()) -> tuple().
 allowed_methods(ReqData, Ctx) ->
-    {['HEAD', 'POST'], ReqData, Ctx}.
+    {['HEAD', 'GET', 'POST'], ReqData, Ctx}.
+
+content_types_provided(ReqData, Ctx) ->
+    {[{"application/json", to_json}], ReqData, Ctx}.
 
 -spec resource_exists(term(), term()) -> {true, term(), term()}.
 resource_exists(ReqData, Ctx) ->
@@ -46,6 +51,18 @@ process_post(ReqData, Ctx) ->
         {false, _} ->
             {false, ReqData, Ctx}
     end.
+
+to_json(ReqData, Ctx) ->
+    case maru_web_sessions:is_valid(ReqData) of
+        true ->
+            UserId = maru_web_sessions:get_user_id(ReqData),
+            [UserRecord] = maru_model_users:find([{id, UserId}]),
+            User = maru_model_users:to_json(UserRecord),
+            {User, ReqData, Ctx};
+        false ->
+            {{halt, 404}, wrq:set_resp_header("Location", "/login.html", ReqData), Ctx}
+    end.
+
 
 %%%===================================================================
 %%% Internal functions
