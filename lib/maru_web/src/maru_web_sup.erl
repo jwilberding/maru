@@ -73,23 +73,8 @@ config() ->
     %{ok, {priv, HostApp}} = application:get_env(dispatch_file),
     {ok, Dispatch} = file:consult(filename:join(HostDir, "dispatch")),
 
-    %% Write out erlydtl compiled templates to priv dir for serving
-    create_static_from_templates(HostDir),
-
     [{ip, IP},
      {port, Port},
      {log_dir, LogDir},
      {backlog, 128},
      {dispatch, Dispatch}].
-
-create_static_from_templates(HostDir) ->
-    TemplatesDir = filename:join(HostDir, "templates"),
-    filelib:fold_files(TemplatesDir, "html", true,
-                       fun(X, _Acc) ->
-			       NewFileName = filename:join([HostDir | filename:split(X) -- filename:split(TemplatesDir)]),
-                               erlydtl:compile(X, page, [force_recompile, {doc_root, TemplatesDir}]),
-                               {ok, File} = page:render(),
-			       filelib:ensure_dir(NewFileName),
-                               file:write_file(NewFileName, File),
-                               ok
-                       end, ok).

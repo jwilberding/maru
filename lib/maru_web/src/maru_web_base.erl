@@ -14,6 +14,7 @@
          content_types_provided/2,
          content_types_accepted/2,
          resource_exists/2,
+         is_authorized/2,
          process_post/2,
          to_json/2,
          to_html/2,
@@ -40,6 +41,15 @@ allowed_methods(ReqData, Ctx) ->
 
 resource_exists(ReqData, Ctx) ->
     {true, ReqData, Ctx}.
+
+is_authorized(ReqData, Ctx) ->
+    case maru_web_sessions:is_valid(ReqData) of
+        true ->
+            UserId = maru_web_sessions:get_user_id(ReqData),
+            {true, ReqData, Ctx#ctx{user_id=UserId}};
+        false ->
+            {{halt, 302}, wrq:set_resp_header("Location", "/login", ReqData), Ctx}
+    end.
 
 process_post(ReqData, Ctx) ->
     case wrq:req_body(ReqData) of
@@ -73,20 +83,6 @@ to_json(ReqData, Ctx) ->
                 [Model] ->
                     {(Ctx#ctx.model):to_json(Model), ReqData, Ctx}
             end
-    end.
-
-to_html(ReqData, Ctx) ->
-    case wrq:path_info(type, ReqData) of
-        "new" ->
-            maru_web_utils:return_file("new.html", ReqData, Ctx);
-        "list" ->
-            maru_web_utils:return_file("list.html", ReqData, Ctx);
-        "edit" ->
-            maru_web_utils:return_file("edit.html", ReqData, Ctx);
-        "show" ->
-            maru_web_utils:return_file("show.html", ReqData, Ctx);
-        _ ->
-            {{halt, 404}, ReqData, Ctx}
     end.
 
 from_json(ReqData, Ctx) ->

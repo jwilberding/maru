@@ -10,3 +10,5 @@ agner install gen_smtp -v 0.1 --indices '[{github,"claimstrade"}, {github, "agne
 agner install ossp_uuid -v 1 --indices '[{github,"claimstrade"}, {github, "agner"}]'
 agner install ibrowse -v  2.1.3 --indices '[{github,"claimstrade"}, {github, "agner"}]'
 agner install erlbrake -v 0.2 --indices '[{github,"claimstrade"}, {github, "agner"}]'
+agner install erlware_commons -v 0.6.0 --indices '[{github,"claimstrade"}, {github, "agner"}]'
+agner install seresye -v 0.0.4 --indices '[{github,"claimstrade"}, {github, "agner"}]'
