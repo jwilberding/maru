@@ -17,7 +17,6 @@
          is_authorized/2,
          process_post/2,
          to_json/2,
-         to_html/2,
          from_json/2]).
 
 -include_lib("webmachine/include/webmachine.hrl").
@@ -31,7 +30,7 @@ init(Model) ->
     {ok, #ctx{model=Model}}.
 
 content_types_provided(ReqData, Ctx) ->
-    {[{"application/json", to_json}, {"text/html", to_html}], ReqData, Ctx}.
+    {[{"application/json", to_json}], ReqData, Ctx}.
 
 content_types_accepted(ReqData, Ctx) ->
     {[{"application/json", from_json}], ReqData, Ctx}.
