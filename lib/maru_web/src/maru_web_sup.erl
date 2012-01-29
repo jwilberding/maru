@@ -52,18 +52,18 @@ config() ->
     {ok, IP} = application:get_env(webmachine_ip),
 
     Port = case application:get_env(webmachine_port) of
-	       {ok, P} ->
-		   P;
-	       _ ->
-		   Home = os:getenv("HOME"),
-		   case file:read_file(filename:join(Home, "environment.json")) of
-		       {ok, Binary} ->
-			   {PropList} = jiffy:decode(Binary),
-			   proplists:get_value(<<"PORT_WWW">>, PropList, 8080);
-		       _ ->
-			   8080
-		   end
-	   end,
+               {ok, P} ->
+                   P;
+               _ ->
+                   Home = os:getenv("HOME"),
+                   case file:read_file(filename:join(Home, "environment.json")) of
+                       {ok, Binary} ->
+                           {PropList} = jiffy:decode(Binary),
+                           proplists:get_value(<<"PORT_WWW">>, PropList, 8080);
+                       _ ->
+                           8080
+                   end
+           end,
 
     {ok, App} = application:get_application(),
     LogDir = filename:join(code:priv_dir(App), "logs"),

@@ -116,8 +116,8 @@ write_unique(V) ->
     Tab = element(1, V),
     Key = element(2, V),
     case mnesia:wread({Tab, Key}) of
-	[Exist] ->
-	    mnesia:abort(Exist);
-	_ ->
-	    mnesia:write(V)
+        [Exist] ->
+            mnesia:abort(Exist);
+        _ ->
+            mnesia:write(V)
     end.

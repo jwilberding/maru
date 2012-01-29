@@ -41,6 +41,10 @@
 %%% API
 %%%===================================================================
 
+convert(_Type, X='_') ->
+    X;
+convert(integer, X)  ->
+    maru_idioms:to_integer(X);
 convert(maru_string, X) when is_binary(X) ->
     X;
 convert(maru_string, X) when is_list(X) ->

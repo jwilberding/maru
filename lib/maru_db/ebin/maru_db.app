@@ -10,6 +10,6 @@
               maru_db,
               maru_db_mnesia]},
    {registered,[maru_db_sup]},
-   {applications, [kernel, stdlib, maru_idioms]},
+   {applications, [kernel, stdlib, mnesia, maru_idioms]},
    {mod, {maru_db_app,[]}},
    {start_phases, []}]}.
