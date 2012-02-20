@@ -12,10 +12,10 @@
 
 %% API
 -export([all/1,
-	 all_keys/1,
-	 create_table/2,
-	 update/1,
-	 delete/2,
+         all_keys/1,
+         create_table/2,
+         update/1,
+         delete/2,
          store/1,
          find/2,
          match/2]).
@@ -26,18 +26,18 @@
 
 all(Tab) ->
     case find(Tab, []) of
-	not_found ->
-	    [];
-	All ->
-	   All
+        not_found ->
+            [];
+        All ->
+            All
     end.
 
 all_keys(Tab) ->
     case mnesia:transaction(?FUN(mnesia:all_keys(Tab))) of
-	{atomic, Keys} ->
-	    Keys;
-	{aborted, Reason} ->
-	    {error, Reason}
+        {atomic, Keys} ->
+            Keys;
+        {aborted, Reason} ->
+            {error, Reason}
     end.
 
 create_table(Name, Fields) ->
@@ -56,17 +56,17 @@ create_table(Name, Fields) ->
 store(Record) when not(is_list(Record))->
     store([Record]);
 store(Records) when is_list(Records)->
-    case mnesia:transaction(?FUN(lists:foreach(?FUN1(write_unique(X)), Records))) of
+    case mnesia:transaction(?FUN(lists:foreach(write_unique(_), Records))) of
         {atomic, ok} ->
             ok;
-        _ ->
-            error
+        {aborted, Reason} ->
+            ?NOTIFY_AIRBRAKE(error, Reason, Reason)
     end.
 
 update(Record) when not(is_list(Record))->
     update([Record]);
 update(Records) when is_list(Records)->
-    case mnesia:transaction(?FUN(lists:foreach(?FUN1(mnesia:write(X)), Records))) of
+    case mnesia:transaction(?FUN(lists:foreach(mnesia:write(_), Records))) of
         {atomic, ok} ->
             ok;
         _ ->
@@ -110,7 +110,7 @@ match_spec(Tab, PropList) ->
     lists:ukeymerge(1, lists:keysort(1, PropList), lists:keysort(1, wildcard_match_spec(Tab))).
 
 wildcard_match_spec(Tab) ->
-    lists:map(?FUN1({X, '_'}), Tab:fields()).
+    lists:map({_, '_'}, Tab:fields()).
 
 write_unique(V) ->
     Tab = element(1, V),

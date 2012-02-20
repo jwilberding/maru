@@ -46,9 +46,9 @@ process_post(ReqData, Ctx) ->
     case maru_web_authenticate:is_valid(Username, Password) of
         {true, UserId} ->
             Cookie = maru_web_sessions:set_new_client_session_id(RememberMe, UserId),
-	    NewReqData = wrq:set_resp_header("Set-Cookie", Cookie, ReqData),
+            NewReqData = wrq:set_resp_header("Set-Cookie", Cookie, ReqData),
             {true, NewReqData, Ctx};
-        {false, _} ->
+        false ->
             {false, ReqData, Ctx}
     end.
 
